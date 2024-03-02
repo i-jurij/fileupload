@@ -1,9 +1,9 @@
 <?php
 //Copyright © 2023 I-Jurij (yjurij@gmail.com)
 //Licensed under the Apache License, Version 2.0
-namespace Fiup;
+namespace Fileupload;
 
-class FileUpload
+class Upload_old
 {
     // user-defined class properties
     public string $dest_dir;

@@ -1,0 +1,26 @@
+{
+    "name": "ijurij/fileupload",
+    "type": "library",
+    "description": "PHP class for file upload.",
+    "license": "Apache v.2.0",
+    "require": {
+    },
+    "require-dev": {
+    },
+    "autoload": {
+        "psr-4": {
+            "Fileupload\\": "src/",
+            "Fileupload\\Classes\\": "src/classes/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

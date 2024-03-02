@@ -12,22 +12,13 @@
 </head>
   <body style="width:100%;">
 <?php
-define ('APPROOT', __DIR__);
-//Loading Libraries
+require_once 'vendor/autoload.php';
 /*
-spl_autoload_register(function($className){
-    if (file_exists(APPROOT.DIRECTORY_SEPARATOR.'app/'.mb_strtolower($className).'.php')) {
-        require_once APPROOT.DIRECTORY_SEPARATOR.'app/'.mb_strtolower($className).'.php';
-    }
-    elseif (file_exists(APPROOT.DIRECTORY_SEPARATOR.'app/traits/'.mb_strtolower($className).'.php')) {
-        require_once APPROOT.DIRECTORY_SEPARATOR.'app/traits/'.mb_strtolower($className).'.php';
-    }
-});
-*/
-spl_autoload_extensions(".php"); // comma-separated list
-spl_autoload_register();
+//// OLD ////////////////////////////////////////////////////////////////
+//Loading Libraries
+use Fileupload\Upload_old;
 // class declaration
-$load = new Fiup\FileUpload;
+$load = new Upload_old;
 // if not empty data from $_FILES
 if ($load->issetData()) {
 ?>
@@ -127,6 +118,14 @@ if ($load->issetData()) {
 <?php
 
 }
+//// END OLD ///////////////////////////////////////////////////////////////////
+*/
+//// NEW //////////////////////////////////////////////////////////////////////
+use Fileupload\Upload;
+$new_load = new Upload;
+echo '<pre>';
+//print_r($new_load::listProperties());
+echo '</pre>';
 ?>
   </body>
 </html>
