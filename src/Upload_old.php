@@ -25,19 +25,21 @@ class Upload_old
     protected string $name;
 
 
-    function __construct() {
+    function __construct()
+    {
         $this->files = self::normalizeFilesArray();
         $this->defaultVars();
     }
-	
+
     /**
      * check if $_FILES exists and normalize it
      * @return array
      */
-    public static function normalizeFilesArray() {
+    public static function normalizeFilesArray()
+    {
         $normalized_array = [];
         if (isset($_FILES)) {
-            foreach($_FILES as $index => $file) {
+            foreach ($_FILES as $index => $file) {
                 if (!is_array($file['name'])) {
                     if (!empty($file['name'])) {
                         $normalized_array[$index][] = $file;
@@ -45,7 +47,7 @@ class Upload_old
                     }
                 }
                 if (!empty($file['name'])) {
-                    foreach($file['name'] as $idx => $name) {
+                    foreach ($file['name'] as $idx => $name) {
                         if (!empty($name)) {
                             $normalized_array[$index][$idx] = [
                                 'name' => $name,
@@ -61,8 +63,9 @@ class Upload_old
         }
         return $normalized_array;
     }
-	
-    public function defaultVars() {
+
+    public function defaultVars()
+    {
         //declaring variables
         $this->phpFileUploadErrors = array(
             0 => 'Success! The file uploaded.',
@@ -107,14 +110,16 @@ class Upload_old
         $this->tmp_dir = '';
     }
 
-    public function issetData() {
+    public function issetData()
+    {
         return (is_array($this->files) && !empty($this->files)) ? true : false;
     }
 
-    public function execute($input_array, $key, $file) {
+    public function execute($input_array, $key, $file)
+    {
         //checking the variables set by the user dest dir and tmp dir
         if (empty($this->dest_dir)) {
-            $this->error = 'ERROR!<br />'. $this->errors[0] .'<br />';
+            $this->error = 'ERROR!<br />' . $this->errors[0] . '<br />';
             return false;
         } else {
             // del ending lash in dir
@@ -126,60 +131,61 @@ class Upload_old
         //check error in FILES
         if ($file['error'] !== 0 && $file['error'] !== '0' && $file['error'] !== 'UPLOAD_ERR_OK') {
             if (array_key_exists($file['error'], $this->phpFileUploadErrors)) {
-                $this->error = 'ERROR!<br />'.$this->phpFileUploadErrors[$file['error']];
+                $this->error = 'ERROR!<br />' . $this->phpFileUploadErrors[$file['error']];
             } else {
-                $this->error = $this->errors[1] .'<br />';
+                $this->error = $this->errors[1] . '<br />';
             }
             return false;
         }
         // checkDestDir
-        if ($this->checkDestDir() === false ) {
+        if ($this->checkDestDir() === false) {
             return false;
         }
         // checkFileSize
-        if ($this->checkFileSize($file['size']) === false ) {
+        if ($this->checkFileSize($file['size']) === false) {
             return false;
         }
         // checkMimeType
-        if ($this->checkMimeType($file['name'], $file['tmp_name']) === false ) {
+        if ($this->checkMimeType($file['name'], $file['tmp_name']) === false) {
             return false;
         }
         // checkExtension
-        if ($this->checkExtension($file['name'], $file['tmp_name']) === false ) {
+        if ($this->checkExtension($file['name'], $file['tmp_name']) === false) {
             return false;
         }
 
         // checkNewFileName
-        if ($this->checkNewFileName($input_array, $key, $file) === false ) {
+        if ($this->checkNewFileName($input_array, $key, $file) === false) {
             return false;
         }
         // moveUpload
-        if ($this->moveUpload($file['tmp_name']) === false ) {
+        if ($this->moveUpload($file['tmp_name']) === false) {
             return false;
         }
         return true;
     }
-   /**
+    /**
      * delete all files into directory
      * @return bool
      */
-    public function delFilesInDir(string $dir, bool $recursive = true) {
+    public function delFilesInDir(string $dir, bool $recursive = true)
+    {
         if (!empty($dir)) {
             $dir = rtrim($dir, DIRECTORY_SEPARATOR);
             if (!is_readable($dir)) {
-                $this->error = 'ERROR!<br />Not unlink files in tmp dir, because dir is not readable "'.$dir.'".<br />';
+                $this->error = 'ERROR!<br />Not unlink files in tmp dir, because dir is not readable "' . $dir . '".<br />';
                 return false;
             }
-            $files = array_diff(scandir($dir), array('.','..'));
+            $files = array_diff(scandir($dir), array('.', '..'));
             foreach ($files as $file) {
-              if (is_dir($dir.DIRECTORY_SEPARATOR.$file) && $recursive === true) {
-                $this->delFilesInDir($dir.DIRECTORY_SEPARATOR.$file, true);
-              } else {
-                if (!unlink($dir.DIRECTORY_SEPARATOR.$file)) {
-                    $this->error = 'ERROR!<br />Not unlink "'.$dir/$file.'".<br />';
-                    return false;
+                if (is_dir($dir . DIRECTORY_SEPARATOR . $file) && $recursive === true) {
+                    $this->delFilesInDir($dir . DIRECTORY_SEPARATOR . $file, true);
+                } else {
+                    if (!unlink($dir . DIRECTORY_SEPARATOR . $file)) {
+                        $this->error = 'ERROR!<br />Not unlink "' . $dir / $file . '".<br />';
+                        return false;
+                    }
                 }
-              }
             }
         }
         return true;
@@ -196,21 +202,22 @@ class Upload_old
      * @return bool
      */
 
-    protected function moveUpload($file_tmp_name) {
+    protected function moveUpload($file_tmp_name)
+    {
         $dir = $this->tmp_dir;
-        if ( empty($this->tmp_dir) ) {
-            $dir = $this->dest_dir.DIRECTORY_SEPARATOR;
+        if (empty($this->tmp_dir)) {
+            $dir = $this->dest_dir . DIRECTORY_SEPARATOR;
         }
-        if ( $this->checkCreateDir($dir, $this->dir_permissions, $this->create_dir) === false ) {
+        if ($this->checkCreateDir($dir, $this->dir_permissions, $this->create_dir) === false) {
             return false;
         }
 
-        if (move_uploaded_file($file_tmp_name, $dir.DIRECTORY_SEPARATOR.$this->new_file_name)) {
-            chmod($dir.DIRECTORY_SEPARATOR.$this->new_file_name , $this->file_permissions);
-            $this->message .= 'File is uploaded to: "'.$dir.DIRECTORY_SEPARATOR.$this->new_file_name.'".<br />';
+        if (move_uploaded_file($file_tmp_name, $dir . DIRECTORY_SEPARATOR . $this->new_file_name)) {
+            chmod($dir . DIRECTORY_SEPARATOR . $this->new_file_name, $this->file_permissions);
+            $this->message .= 'File is uploaded to: "' . $dir . DIRECTORY_SEPARATOR . $this->new_file_name . '".<br />';
             return true;
         } else {
-            $this->error = 'ERROR!<br />'.$this->errors[15] .'<br />';
+            $this->error = 'ERROR!<br />' . $this->errors[15] . '<br />';
             return false;
         }
     }
@@ -227,7 +234,8 @@ class Upload_old
      * @param array $file (a file array from $_FILES['input])
      * @return bool
      */
-    protected function checkNewFileName($input_array, $key, $file) {
+    protected function checkNewFileName($input_array, $key, $file)
+    {
         if ($this->newName($input_array, $key, $file)) {
             // wrap aroung jpeg -> jpg
             if ($this->getExtWithPoint($file['name']) === '.jpeg') {
@@ -235,17 +243,17 @@ class Upload_old
             } else {
                 $ext = $this->getExtWithPoint($file['name']);
             }
-            $newName = $this->name.$ext;
+            $newName = $this->name . $ext;
             //$newName = $this->name.$this->getExtWithPoint($file['name']);
-            if (file_exists($this->dest_dir.DIRECTORY_SEPARATOR.$newName)) {
+            if (file_exists($this->dest_dir . DIRECTORY_SEPARATOR . $newName)) {
                 if ($this->replace_old_file) {
                     $this->new_file_name = $newName;
                     return true;
                 } else {
                     $this->error = 'ERROR!<br />
                                         Change $this->new_file_name for upload class in model or set $this->replace_old_file = true,<br />
-                                        because '. $this->errors[14] .'<br />
-                                        File: "'.$newName.'", dir: "'.$this->dest_dir.'".<br />';
+                                        because ' . $this->errors[14] . '<br />
+                                        File: "' . $newName . '", dir: "' . $this->dest_dir . '".<br />';
                     return false;
                 }
             } else {
@@ -263,19 +271,20 @@ class Upload_old
      * @param array $file (a file array from $_FILES['input])
      * @return bool
      */
-    protected function newName($input_array, $key, $file) {
+    protected function newName($input_array, $key, $file)
+    {
         //get patrs of files name
         if (!empty($file['name'])) {
             $path_parts = pathinfo($file['name']);
         } else {
-            $this->error = 'ERROR!<br />'. $this->errors[13] .'<br />';
+            $this->error = 'ERROR!<br />' . $this->errors[13] . '<br />';
             return false;
         }
         //sanitize filename or create filename from old filename
         if (empty($this->new_file_name)) {
             //create new file name
-                $this->name = $this->sanitizeString($this->translitOstslav2lat($path_parts['filename']));
-                return true;
+            $this->name = $this->sanitizeString($this->translitOstslav2lat($path_parts['filename']));
+            return true;
         } else {
             if (count($input_array) > 1) {
                 $name = $this->name0($path_parts['filename'], $key);
@@ -286,12 +295,13 @@ class Upload_old
             return true;
         }
     }
-    protected function name0($name, $key) {
+    protected function name0($name, $key)
+    {
         if (is_array($this->new_file_name)) {
             if ($this->new_file_name[1] === 'noindex' or $this->new_file_name[1] === false) {
                 $prename = (!empty($this->new_file_name[0])) ? $this->new_file_name[0] : $name;
             } elseif ($this->new_file_name[1] === 'index' or $this->new_file_name[1] === true) {
-                $prename = (!empty($this->new_file_name[0])) ? $key.'_'.$this->new_file_name[0] : $key.'_'.$name;
+                $prename = (!empty($this->new_file_name[0])) ? $key . '_' . $this->new_file_name[0] : $key . '_' . $name;
             }
         } else {
             $prename = $this->new_file_name;
@@ -303,20 +313,24 @@ class Upload_old
      * @param string $var
      * @return string
      */
-    function translitOstslav2lat($textcyr) {
-        $cyr = ['Ц','ц', 'а','б','в','ў','г','ґ','д','е','є','ё','ж','з','и','ï','й','к','л','м','н','о','п', 'р','с','т','у','ф','х','ц','ч','ш','щ','ъ','ы','ь','э','ю','я', 'А','Б','В','Ў','Г','Ґ','Д','Е','Є','Ё','Ж','З','И','Ї','Й','К','Л','М','Н','О','П', 'Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','Ъ','Ы','Ь','Э','Ю','Я'
+    function translitOstslav2lat($textcyr)
+    {
+        $cyr = [
+            'Ц', 'ц', 'а', 'б', 'в', 'ў', 'г', 'ґ', 'д', 'е', 'є', 'ё', 'ж', 'з', 'и', 'ï', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я', 'А', 'Б', 'В', 'Ў', 'Г', 'Ґ', 'Д', 'Е', 'Є', 'Ё', 'Ж', 'З', 'И', 'Ї', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я'
         ];
-        $lat = ['C','c', 'a','b','v','w','g','g','d','e','ye','io','zh','z','i','yi','y','k','l','m','n','o','p', 'r','s','t','u','f','h','ts','ch','sh','sht','a','i','y','e','yu','ya', 'A','B','V','W','G','G','D','E','Ye','Io','Zh','Z','I','Yi','Y','K','L','M','N','O','P', 'R','S','T','U','F','H','Ts','Ch','Sh','Sht','A','I','Y','e','Yu','Ya'
+        $lat = [
+            'C', 'c', 'a', 'b', 'v', 'w', 'g', 'g', 'd', 'e', 'ye', 'io', 'zh', 'z', 'i', 'yi', 'y', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 't', 'u', 'f', 'h', 'ts', 'ch', 'sh', 'sht', 'a', 'i', 'y', 'e', 'yu', 'ya', 'A', 'B', 'V', 'W', 'G', 'G', 'D', 'E', 'Ye', 'Io', 'Zh', 'Z', 'I', 'Yi', 'Y', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'F', 'H', 'Ts', 'Ch', 'Sh', 'Sht', 'A', 'I', 'Y', 'e', 'Yu', 'Ya'
         ];
         $textlat = str_replace($cyr, $lat, $textcyr);
         return $textlat;
     }
-     /**
+    /**
      * replaces all letters with Latin ASCII
      * @param string $var
      * @return string
      */
-    function translit2lat($text) {
+    function translit2lat($text)
+    {
         $res = iconv("UTF-8", "ASCII//TRANSLIT//IGNORE", transliterator_transliterate('Any-Latin; Latin-ASCII', $text));
         return $res;
     }
@@ -335,17 +349,21 @@ class Upload_old
             // remove illegal file system characters
             $var = str_replace(array_map('chr', range(0, 31)), '', $var);
             // remove dangerous characters for file names
-            $chars = array("?", "[", "]", "/", "\\", "=", "<", ">", ":", ";", ",", "'", "\"", "&", "’", "%20",
-                        "+", "$", "#", "*", "(", ")", "|", "~", "`", "!", "{", "}", "%", "+", "^", chr(0));
+            $chars = array(
+                "?", "[", "]", "/", "\\", "=", "<", ">", ":", ";", ",", "'", "\"", "&", "’", "%20",
+                "+", "$", "#", "*", "(", ")", "|", "~", "`", "!", "{", "}", "%", "+", "^", chr(0)
+            );
             $var = str_replace($chars, '_', $var);
             // remove break/tabs/return carriage
             $var = preg_replace('/[\r\n\t -]+/', '_', $var);
             // convert some special letters
-            $convert = array('Þ' => 'TH', 'þ' => 'th', 'Ð' => 'DH', 'ð' => 'dh', 'ß' => 'ss',
-                            'Œ' => 'OE', 'œ' => 'oe', 'Æ' => 'AE', 'æ' => 'ae', 'µ' => 'u' );
+            $convert = array(
+                'Þ' => 'TH', 'þ' => 'th', 'Ð' => 'DH', 'ð' => 'dh', 'ß' => 'ss',
+                'Œ' => 'OE', 'œ' => 'oe', 'Æ' => 'AE', 'æ' => 'ae', 'µ' => 'u'
+            );
             $var = strtr($var, $convert);
             // remove foreign accents by converting to HTML entities, and then remove the code
-            $var = html_entity_decode( $var, ENT_QUOTES, "utf-8" );
+            $var = html_entity_decode($var, ENT_QUOTES, "utf-8");
             $var = htmlentities($var, ENT_QUOTES, "utf-8");
             $var = preg_replace("/(&)([a-z])([a-z]+;)/i", '$2', $var);
             // clean up, and remove repetitions
@@ -367,30 +385,31 @@ class Upload_old
      * @param string $file_tmp_name (from $_FILES['tmp_name])
      * @return bool
      */
-    protected function checkMimeType($file_name, $file_tmp_name) {
+    protected function checkMimeType($file_name, $file_tmp_name)
+    {
         if (!empty($file_tmp_name)) {
             $mt = $this->getMimeType($file_tmp_name);
             list($core, $ext) = explode('/', $mt);
-            if ( empty($this->file_mimetype) ) {
+            if (empty($this->file_mimetype)) {
                 return true;
             } else {
                 if (is_string($this->file_mimetype)) {
                     if ((!empty($core) && $this->file_mimetype === $core) || $this->file_mimetype === $mt) {
                         return true;
                     } else {
-                        $this->error .= 'ERROR!<br />'.$this->errors[9].' File mimetype is "'.$mt.'", expected "'.$this->file_mimetype.'".<br />';
+                        $this->error .= 'ERROR!<br />' . $this->errors[9] . ' File mimetype is "' . $mt . '", expected "' . $this->file_mimetype . '".<br />';
                         return false;
                     }
                 } else {
                     if (is_array($this->file_mimetype)) {
-                        if ( (!empty($core) && in_array($core, $this->file_mimetype)) || in_array($mt, $this->file_mimetype) ) {
+                        if ((!empty($core) && in_array($core, $this->file_mimetype)) || in_array($mt, $this->file_mimetype)) {
                             return true;
                         } else {
-                            $this->error .= 'ERROR!<br />'.$this->errors[9].' File mimetype is "'.$mt.'", expected "'.implode('", "', $this->file_mimetype).'".<br />';
+                            $this->error .= 'ERROR!<br />' . $this->errors[9] . ' File mimetype is "' . $mt . '", expected "' . implode('", "', $this->file_mimetype) . '".<br />';
                             return false;
                         }
                     } else {
-                        $this->error .= 'ERROR!<br />'.$this->errors[10].'<br />';
+                        $this->error .= 'ERROR!<br />' . $this->errors[10] . '<br />';
                         return false;
                     }
                 }
@@ -405,14 +424,15 @@ class Upload_old
         } else {
             return false;
         }
-	}
+    }
 
     /**
      * @param string $filename (from $_FILES['name])
      * @param string $file_tmp_name (from $_FILES['tmp_name])
      * @return bool
      */
-    protected function checkExtension($file_name, $file_tmp_name) {
+    protected function checkExtension($file_name, $file_tmp_name)
+    {
         if (empty($this->file_ext)) {
             return true;
         } else {
@@ -420,7 +440,7 @@ class Upload_old
             $pext = $this->getExtWithPoint($file_name);
             $mt = $this->getMimeType($file_tmp_name);
             // crutch for jpg
-            if ( ($mt === "image/jpeg" or $mt === "image/pjpeg") && $ext === 'jpg' ) {
+            if (($mt === "image/jpeg" or $mt === "image/pjpeg") && $ext === 'jpg') {
                 $r = true;
             } else {
                 if ($this->mime2ext($mt) === $ext) {
@@ -436,42 +456,45 @@ class Upload_old
                     if (in_array($ext, $this->file_ext) || in_array($pext, $this->file_ext)) {
                         return true;
                     } else {
-                        $this->error = 'ERROR!<br />'.$this->errors[11].' File ext is "'.$ext.'", expected "'.implode('", "', $this->file_ext).'".<br />';
+                        $this->error = 'ERROR!<br />' . $this->errors[11] . ' File ext is "' . $ext . '", expected "' . implode('", "', $this->file_ext) . '".<br />';
                         return false;
                     }
                 } else {
-                    $this->error = 'ERROR!<br />'.$this->errors[12].'<br />';
+                    $this->error = 'ERROR!<br />' . $this->errors[12] . '<br />';
                     return false;
                 }
             } else {
-                $this->error = 'ERROR!<br />'.$this->errors[11].'" '.$ext.'", because mimetype of uploaded file is: "'.$mt.'".<br />';
+                $this->error = 'ERROR!<br />' . $this->errors[11] . '" ' . $ext . '", because mimetype of uploaded file is: "' . $mt . '".<br />';
                 return false;
             }
         }
-	}
+    }
     /**
-    * @param string $filename
-    * @return string file extension without a dot at the beginning
-    */
-    public function getExtension($filename) {
-		//$ext = strtolower(mb_substr(strrchr($filename, '.'), 1));
+     * @param string $filename
+     * @return string file extension without a dot at the beginning
+     */
+    public function getExtension($filename)
+    {
+        //$ext = strtolower(mb_substr(strrchr($filename, '.'), 1));
         $path_info = pathinfo($filename);
         $ext = strtolower($path_info['extension']);
-		return $ext;
-	}
+        return $ext;
+    }
     /**
-    * @param string $filename
-    * @return string file extension with a dot at the beginning
-    */
-    public function getExtWithPoint($filename) {
-		$ext = strtolower(strrchr($filename, '.'));
-		return $ext;
-	}
+     * @param string $filename
+     * @return string file extension with a dot at the beginning
+     */
+    public function getExtWithPoint($filename)
+    {
+        $ext = strtolower(strrchr($filename, '.'));
+        return $ext;
+    }
     /**
      * @param string $mimetype
      * @return string or false
      */
-    public function mime2ext($mime) {
+    public function mime2ext($mime)
+    {
         $mime_map = [
             'video/3gpp2'                                                               => '3g2',
             'video/3gp'                                                                 => '3gp',
@@ -663,33 +686,35 @@ class Upload_old
      * @param string $file
      * @return string or false
      */
-    function getMimeType(string $file) {
-		$mtype = false;
-		if (function_exists('finfo_open')) {
-			$finfo = finfo_open(FILEINFO_MIME_TYPE);
-			$mtype = finfo_file($finfo, $file);
-			finfo_close($finfo);
-		} elseif (function_exists('mime_content_type')) {
-			$mtype = mime_content_type($file);
-		}
-		return $mtype;
-	}
+    function getMimeType(string $file)
+    {
+        $mtype = false;
+        if (function_exists('finfo_open')) {
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mtype = finfo_file($finfo, $file);
+            finfo_close($finfo);
+        } elseif (function_exists('mime_content_type')) {
+            $mtype = mime_content_type($file);
+        }
+        return $mtype;
+    }
     /**
      * check size of upload file, set $this->file_size
      * @param int $size_from_this_files
      * @return bool
      */
-    protected function checkFileSize(int $size_from_this_files) {
+    protected function checkFileSize(int $size_from_this_files)
+    {
         if (!empty($size_from_this_files)) {
             $size = (!empty($this->file_size) && is_numeric($this->file_size)) ? $this->file_size : 1024000;
-            if ( $size_from_this_files <= $size) {
-               return true;
+            if ($size_from_this_files <= $size) {
+                return true;
             } else {
-                $this->error = 'ERROR!<br />' . $this->errors[8] .'<br />';;
+                $this->error = 'ERROR!<br />' . $this->errors[8] . '<br />';;
                 return false;
             }
         } else {
-            $this->error = 'ERROR!<br />' . $this->errors[7] .'<br />';
+            $this->error = 'ERROR!<br />' . $this->errors[7] . '<br />';
             return false;
         }
     }
@@ -697,12 +722,13 @@ class Upload_old
      * check if destination dir exists
      * @return bool
      */
-    public function checkDestDir() {
+    public function checkDestDir()
+    {
         if (!is_string($this->dest_dir)) {
-            $this->error = 'ERROR! ' . $this->errors[6].'<br />';
+            $this->error = 'ERROR! ' . $this->errors[6] . '<br />';
             return false;
         }
-        if ( $this->checkCreateDir($this->dest_dir, $this->dir_permissions, $this->create_dir) ) {
+        if ($this->checkCreateDir($this->dest_dir, $this->dir_permissions, $this->create_dir)) {
             return true;
         } else {
             return false;
@@ -715,39 +741,39 @@ class Upload_old
      * @param bool $create - create dir if not exists
      * @return bool
      */
-    public function checkCreateDir(string $dir, int $dir_permissions, bool $create) {
-            if (file_exists($dir)) {
-                if (is_dir($dir)) {
-                    if ( is_writable($dir)) {
+    public function checkCreateDir(string $dir, int $dir_permissions, bool $create)
+    {
+        if (file_exists($dir)) {
+            if (is_dir($dir)) {
+                if (is_writable($dir)) {
+                    return true;
+                } else {
+                    if (chmod($dir, $dir_permissions)) {
                         return true;
                     } else {
-                        if (chmod($dir, $dir_permissions)) {
-                            return true;
-                        } else {
-                            $this->error = 'ERROR! Dir "'.$dir.'": ' . $this->errors[2].'<br />';
-                            return false;
-                        }
+                        $this->error = 'ERROR! Dir "' . $dir . '": ' . $this->errors[2] . '<br />';
+                        return false;
                     }
+                }
+            } else {
+                $this->error = 'ERROR! Dir "' . $dir . '": ' . $this->errors[3] . '<br />';
+                return false;
+            }
+        } else {
+            # create dir if $create_dir = true or message - dir not exists
+            if ($create) {
+                if (mkdir($dir, $dir_permissions, true)) {
+                    return true;
                 } else {
-                    $this->error = 'ERROR! Dir "'.$dir.'": ' . $this->errors[3].'<br />';
+                    $this->error = 'ERROR! Dir "' . $dir . '": ' . $this->errors[4] . '<br />';
                     return false;
                 }
             } else {
-                # create dir if $create_dir = true or message - dir not exists
-                if ($create) {
-                    if (mkdir($dir, $dir_permissions, true)) {
-                        return true;
-                    } else {
-                        $this->error = 'ERROR! Dir "'.$dir.'": ' . $this->errors[4].'<br />';
-                        return false;
-                    }
-                } else {
-                    $this->error = 'ERROR! Dir "'.$dir.'": ' . $this->errors[5].'<br />';
-                    return false;
-                }
+                $this->error = 'ERROR! Dir "' . $dir . '": ' . $this->errors[5] . '<br />';
+                return false;
             }
+        }
     }
 }
 //Copyright © 2023 I-Jurij (ijurij@gmail.com)
 //Licensed under the Apache License, Version 2.0
-?>

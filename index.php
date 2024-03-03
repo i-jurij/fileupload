@@ -11,6 +11,7 @@
   <meta name="author" content="i-jurij" >
 </head>
   <body style="width:100%;">
+
 <?php
 require_once 'vendor/autoload.php';
 /*
@@ -116,16 +117,55 @@ if ($load->issetData()) {
 	    </div>
   	</form>
 <?php
-
 }
 //// END OLD ///////////////////////////////////////////////////////////////////
 */
+
 //// NEW //////////////////////////////////////////////////////////////////////
 use Fileupload\Upload;
 $new_load = new Upload;
-echo '<pre>';
-//print_r($new_load::listProperties());
-echo '</pre>';
+if ($new_load->issetData()) {
+	?>
+		<p><a href="javascript:history.back()" >Back</a></p>
+	<?php
+	echo '<pre>';
+	//print_r($new_load::listProperties());
+	print_r($new_load);
+	echo '</pre>';
+} else {
+	?>
+	<form method="post" action="" enctype="multipart/form-data" id="upload_test" style="width:100%;">
+		<div style="max-width:360px;margin:20px auto;">
+	       	<p >
+		        <label >File <small>(.php, .html, < 300KB)</small>:<br />
+		           	<input type="hidden" name="MAX_FILE_SIZE" value="307200" />
+					<input type="file" name="file" accept=".php, .html, text/html, text/php, text/x-php" required>
+		        </label>
+		    </p>
+		    <p >
+		        <label >File <small>(jpg, png, webp, < 1MB)</small>:<br />
+		            <input type="hidden" name="MAX_FILE_SIZE" value="1024000" />
+		            <input type="file" name="picture" accept=".jpg, .jpeg, .png, .webp, image/jpeg, image/pjpeg, image/png, image/webp">
+		        </label>
+		    </p>
+		    <p >
+		        <label >Multiple files <small>(jpg, png, webp, < 1MB)</small>:<br />
+		            <input type="hidden" name="MAX_FILE_SIZE" value="1024000" />
+		            <input type="file" multiple="multiple" name="pictures[]" accept=".jpg, .jpeg, .png, .webp, image/jpeg, image/pjpeg, image/png, image/webp">
+		          	<!--<input type="file" name="pictures[]" />
+					<input type="file" name="pictures[]" /> -->
+				</label>
+		    </p>
+	    </div>
+	    <div style="max-width:360px;margin:20px auto;">
+	        <button type="submit" form="upload_test">Upload</button>
+	        <button type="reset" form="upload_test" >Reset</button>
+	    </div>
+  	</form>
+<?php
+}
+//// END NEW //////////////////////////////////////////////////////////////////////
+
 ?>
   </body>
 </html>
