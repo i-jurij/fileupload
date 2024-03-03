@@ -128,9 +128,9 @@ if ($new_load->issetData()) {
 	?>
 		<p><a href="javascript:history.back()" >Back</a></p>
 	<?php
+	$new_load->dest_dir = 'bbb';
 	echo '<pre>';
-	//print_r($new_load::listProperties());
-	print_r($new_load);
+	print_r([$new_load->dest_dir] + $new_load->files);
 	echo '</pre>';
 } else {
 	?>
