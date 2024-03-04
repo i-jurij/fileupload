@@ -15,6 +15,8 @@ class NormaliseFiles
             foreach ($_FILES as $index => $file) {
                 if (!is_array($file['name'])) {
                     if (!empty($file['name'])) {
+                        //sanitize name
+
                         $normalized_array[$index][] = $file;
                         continue;
                     }

@@ -7,6 +7,7 @@ use Fileupload\Classes\Config;
 use Fileupload\Classes\NormaliseFiles;
 use Fileupload\Classes\CheckDestDir;
 use Fileupload\Classes\Errors;
+use Fileupload\Traits\DelFilesInDir;
 
 class Upload extends Config
 {
@@ -20,59 +21,37 @@ class Upload extends Config
         return (is_array($this->files) && !empty($this->files)) ? true : false;
     }
 
-    public function execute($input_array, $key, $file)
+    public function execute($vars)
     {
+        $this->defaultVars();
         $err = new Errors;
-        //checking the variables set by the user dest dir and tmp dir
-        if (empty($this->dest_dir)) {
-            $this->error = 'ERROR!<br />' . $err->errors[0] . '<br />';
-            return false;
-        } else {
-            // del ending lash in dir
-            $this->dest_dir = rtrim($this->dest_dir, DIRECTORY_SEPARATOR);
-            if (!empty($this->tmp_dir)) {
-                $this->tmp_dir = rtrim($this->tmp_dir, DIRECTORY_SEPARATOR);
+        //foreach $this->files for processing and get vars for inputs  
+        foreach ($this->files as $input => $input_array) {
+            $this->message .= 'Input "'.$input.'":<br />';
+            // GET the vars for input from $vars
+            if (!empty($vars[$input]) && is_array($vars[$input])) {
+                //set the vars from user vars array
+                
             }
-        }
-        //check error in FILES
-        if ($file['error'] !== 0 && $file['error'] !== '0' && $file['error'] !== 'UPLOAD_ERR_OK') {
-            if (array_key_exists($file['error'],$err->phpFileUploadErrors)) {
-                $this->error = 'ERROR!<br />' . $err->phpFileUploadErrors[$file['error']];
-            } else {
-                $this->error = $err->errors[1] . '<br />';
-            }
-            return false;
-        }
-        // checkDestDir
-        if ((new CheckDestDir)->run($this->dest_dir, $this->dir_permissions, $this->create_dir, $err) === false) {
-            $this->error = 'ERROR! ' . $err->errors[6] . '<br />';
-            foreach ($err->getAll() as $value) {
-                $this->error .= $value . '<br />';
-            }
-            return false;
-        }
-        // checkFileSize
-        if ($this->checkFileSize($file['size']) === false) {
-            return false;
-        }
-        // checkMimeType
-        if ($this->checkMimeType($file['name'], $file['tmp_name']) === false) {
-            return false;
-        }
-        // checkExtension
-        if ($this->checkExtension($file['name'], $file['tmp_name']) === false) {
-            return false;
-        }
+            
 
-        // checkNewFileName
-        if ($this->checkNewFileName($input_array, $key, $file) === false) {
-            return false;
+            foreach ($input_array as $key => $file) {
+                if (!empty($file['name'])) {
+                    if (mb_strlen($file['name'], 'UTF-8') < 101) {
+                        $name = $file['name'];
+                    } else {
+                        $name = mb_strimwidth($file['name'], 0, 48, "...") . mb_substr($file['name'], -48, null, 'UTF-8');
+                    }
+                    $this->message .= 'Name "'.$name.'":<br />';
+                }
+                //check errors in files array $file
+
+                //check other
+
+                //move_upload each file
+
+            }
         }
-        // moveUpload
-        if ($this->moveUpload($file['tmp_name']) === false) {
-            return false;
-        }
-        return true;
     }
 }
 //Copyright © 2023 I-Jurij (ijurij@gmail.com)

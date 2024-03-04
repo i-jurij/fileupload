@@ -10,7 +10,8 @@
     "autoload": {
         "psr-4": {
             "Fileupload\\": "src/",
-            "Fileupload\\Classes\\": "src/classes/"
+            "Fileupload\\Classes\\": "src/classes/",
+            "Fileupload\\Traits\\": "src/traits/"
         }
     },
     "autoload-dev": {
