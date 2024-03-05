@@ -3,19 +3,23 @@ namespace Fileupload\Classes;
 
 class Registry
 { 
-	public static $_storage = array(); 
+	public $storage = array(); 
     
-    public static function set($value) {
-		self::$_storage[] = $value;
+    public function set($key, $value) {
+		$this->storage[$key] = $value;
 	}
-	public static function getAll()
+	public function get($key)
 	{
-		return self::$_storage;
+		return $this->storage[$key];
+	}
+	public function getAll()
+	{
+		return $this->storage;
 	}
  
-	public static function clean()
+	public function clean()
 	{
-		self::$_storage = array(); 
+		$this->storage = array(); 
 		return true;
 	}
 }

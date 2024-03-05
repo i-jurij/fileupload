@@ -15,23 +15,21 @@ class NormaliseFiles
             foreach ($_FILES as $index => $file) {
                 if (!is_array($file['name'])) {
                     if (!empty($file['name'])) {
-                        //sanitize name
-
+                        $file['name'] = SanitizeFileName::run($file['name']);
                         $normalized_array[$index][] = $file;
                         continue;
                     }
                 }
                 if (!empty($file['name'])) {
                     foreach ($file['name'] as $idx => $name) {
-                        if (!empty($name)) {
-                            $normalized_array[$index][$idx] = [
-                                'name' => $name,
-                                'type' => $file['type'][$idx],
-                                'tmp_name' => $file['tmp_name'][$idx],
-                                'error' => $file['error'][$idx],
-                                'size' => $file['size'][$idx]
-                            ];
-                        }
+                        $sanitize_name = SanitizeFileName::run($name);
+                        $normalized_array[$index][$idx] = [
+                            'name' => $sanitize_name,
+                            'type' => $file['type'][$idx],
+                            'tmp_name' => $file['tmp_name'][$idx],
+                            'error' => $file['error'][$idx],
+                            'size' => $file['size'][$idx]
+                        ];
                     }
                 }
             }

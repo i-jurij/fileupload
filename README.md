@@ -1,5 +1,10 @@
 ## PHP library for single or multiple file uploads.
+Require PHP >= 8.1.0   
 
+### Install
+
+
+### Usage
 HTML inputs must be next formats:   
 a) for single file   
 ``` <input type="file" name="file" > ```   
@@ -30,7 +35,7 @@ b) for files array
         $this->file_mimetype = ''; //any
         $this->file_ext = ''; //any
         $this->new_file_name = ''; //any
-        $this->message = '';
+        $this->message = [];
         $this->error = '';
     }
 ```   

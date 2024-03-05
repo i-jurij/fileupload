@@ -1,6 +1,7 @@
 {
     "name": "ijurij/fileupload",
     "type": "library",
+    "version": "1.0",
     "description": "PHP class for file upload.",
     "license": "Apache v.2.0",
     "require": {
@@ -10,13 +11,13 @@
     "autoload": {
         "psr-4": {
             "Fileupload\\": "src/",
-            "Fileupload\\Classes\\": "src/classes/",
-            "Fileupload\\Traits\\": "src/traits/"
+            "Fileupload\\Classes\\": "src/Classes/",
+            "Fileupload\\Traits\\": "src/Traits/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Tests\\": "Tests/"
         }
     },
     "config": {

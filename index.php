@@ -15,13 +15,15 @@
 <body style="width:100%;">
 
 	<?php
-	require_once 'vendor/autoload.php';
+	require_once __DIR__ . '/vendor/autoload.php';
 	use Fileupload\Upload;
+	$new_load = new Upload();
+
 	//set vars for each inputs from form if you need it (array('name_of_input' => [vars]))
-	$vars = [
+	$new_load->config = [
 		'picture' => 	[],
 		'file' => 	[	'dest_dir' => 'upload_text', // where upload file will be saved
-						'create_dir' => true, //create destination dir
+						'create_dir' => 123, //create destination dir
 						'dir_permissions' => 0777, // permissions for dest dir
 						'file_size' => 3 * 100 * 1024, //300KB - size for upload files = MAX_FILE_SIZE from html
 						'file_permissions' => 0666, // permissions for the file being created
@@ -31,9 +33,9 @@
 						'replace_old_file' => false // replace old file in dest dir with new upload file with same name
 		],
 		'pictures' => [		'dest_dir' => 'upload_pictures',
-							'create_dir' => true, //create destination dir
-							'dir_permissions' => 0777,
-							'file_permissions' => 0666,
+							//'create_dir' => true, the same as "file"
+							//'dir_permissions' => 0777, the same as "file"
+							//'file_permissions' => 0666, the same as "file"
 							'file_size' => 1 * 1000 * 1024, //1MB
 							'file_mimetype' => ['image/jpeg', 'image/pjpeg', 'image/png', 'image/webp'],
 							'file_ext' => ['.jpg', '.jpeg', '.png', '.webp'],
@@ -42,23 +44,30 @@
 		]
 	];
 
-	$new_load = new Upload();
 	if ($new_load->issetData()) {
 	?>
 		<p><a href="javascript:history.back()">Back</a></p>
 		<?php
+/*
+		print octdec('0755') . '<br>';
+		print decoct(493) . '<br>';
+
+		print octdec('0644') . '<br>';
+		print decoct(420) . '<br>';
+*/
 		// PROCESSING DATA
-		if ($new_load->execute($vars)) {
+		print '<pre>';
+		if ($new_load->execute()) {
 			if (!empty($new_load->message)) {
-				print $new_load->message;
-				print '<br />';
+				print_r($new_load->message);
+				print '<hr>';
 			}
-		} else {
 			if (!empty($new_load->error)) {
-				print $new_load->error;
+				print_r($new_load->error);
 				print '<br />';
 			}
 		}
+		print '</pre>';
 		//
 		// some command for processing a file located in a dest_dir
 		//

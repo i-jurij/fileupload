@@ -16,8 +16,8 @@ class Config
     public bool $replace_old_file;
     // other properties
     public array $files;
-    public string $message = '';
-    public string $error = '';
+    public array $message;
+    public array $error;
     public string $name;
 
     public function listProperties() {
@@ -25,8 +25,8 @@ class Config
     } 
 
     public function defaultVars() {
-        $this->message = '';
-        $this->error = '';
+        $this->message = [];
+        $this->error = [];
         $this->dest_dir = 'upload_files';
         $this->dir_permissions = 0755;
         $this->file_permissions = 0644;
