@@ -42,17 +42,14 @@ class Upload extends Config
      */
     public function execute()
     {
-        $this->defaultVars();
         $mes = new Messages;
         $err = new Errors;
         foreach ($this->files as $input => $input_array) {
             $mes->set($input, []);
-            $conf = true;
-            if (!$this->getSetConfigs($input, $err)) {
-                $conf = false;
-            }
+            $this->getSetConfigs($input, $err);
             //print '<pre>'; print_r($this); print '</pre>'; 
             //print '<pre>'; print_r($err); print '</pre>'; 
+            print $this->dest_dir;
 
             foreach ($input_array as $key => $file) {
                 if (!empty($file['name'])) {
@@ -60,7 +57,7 @@ class Upload extends Config
                     $temp_var['filesname'][$key] = $file['name'];
                     $mes->set($input, $temp_var);
                 }
-                if ($conf) {
+                if ($this->conf) {
                     //check errors in files array $file
 
                     //check other
@@ -69,8 +66,8 @@ class Upload extends Config
                 }
             }
         }
-        $this->message = $mes->getAll();
         $this->error = $err->getAll();
+        $this->message = array_merge_recursive($mes->getAll(), $this->error);
         return true;
     }
 }

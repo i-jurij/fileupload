@@ -15,32 +15,39 @@
 <body style="width:100%;">
 
 	<?php
+	error_reporting(E_ALL);
+	ini_set('display_errors', '1');
+
 	require_once __DIR__ . '/vendor/autoload.php';
+
 	use Fileupload\Upload;
+
 	$new_load = new Upload();
 
 	//set vars for each inputs from form if you need it (array('name_of_input' => [vars]))
 	$new_load->config = [
 		'picture' => 	[],
-		'file' => 	[	'dest_dir' => 'upload_text', // where upload file will be saved
-						'create_dir' => 123, //create destination dir
-						'dir_permissions' => 0777, // permissions for dest dir
-						'file_size' => 3 * 100 * 1024, //300KB - size for upload files = MAX_FILE_SIZE from html
-						'file_permissions' => 0666, // permissions for the file being created
-						'file_mimetype' => ['text/php', 'text/x-php', 'text/html'], // allowed mime-types for upload file
-						'file_ext' => ['.php', 'html'], // allowed extension for upload file
-						'new_file_name' => '', // new name of upload file
-						'replace_old_file' => false // replace old file in dest dir with new upload file with same name
+		'file' => 	[
+			'dest_dir' => 'upload_text', // where upload file will be saved
+			'create_dir' => 123, //create destination dir
+			'dir_permissions' => 0777, // permissions for dest dir
+			'file_size' => 3 * 100 * 1024, //300KB - size for upload files = MAX_FILE_SIZE from html
+			'file_permissions' => 0666, // permissions for the file being created
+			'file_mimetype' => ['text/php', 'text/x-php', 'text/html'], // allowed mime-types for upload file
+			'file_ext' => ['.php', 'html'], // allowed extension for upload file
+			'new_file_name' => '', // new name of upload file
+			'replace_old_file' => false // replace old file in dest dir with new upload file with same name
 		],
-		'pictures' => [		'dest_dir' => 'upload_pictures',
-							//'create_dir' => true, the same as "file"
-							//'dir_permissions' => 0777, the same as "file"
-							//'file_permissions' => 0666, the same as "file"
-							'file_size' => 1 * 1000 * 1024, //1MB
-							'file_mimetype' => ['image/jpeg', 'image/pjpeg', 'image/png', 'image/webp'],
-							'file_ext' => ['.jpg', '.jpeg', '.png', '.webp'],
-							'new_file_name' => ['zzz', 'index'], // ['', 'noindex'], 'new_filename'
-							'replace_old_file' => true
+		'pictures' => [
+			'dest_dir' => 'upload_pictures/',
+			//'create_dir' => true, the same as "file"
+			//'dir_permissions' => 0777, the same as "file"
+			//'file_permissions' => 0666, the same as "file"
+			'file_size' => 1 * 1000 * 1024, //1MB
+			'file_mimetype' => ['image/jpeg', 'image/pjpeg', 'image/png', 'image/webp'],
+			'file_ext' => ['.jpg', '.jpeg', '.png', '.webp'],
+			'new_file_name' => ['zzz', 'index'], // ['', 'noindex'], 'new_filename'
+			'replace_old_file' => true
 		]
 	];
 
@@ -48,24 +55,9 @@
 	?>
 		<p><a href="javascript:history.back()">Back</a></p>
 		<?php
-/*
-		print octdec('0755') . '<br>';
-		print decoct(493) . '<br>';
-
-		print octdec('0644') . '<br>';
-		print decoct(420) . '<br>';
-*/
-		// PROCESSING DATA
 		print '<pre>';
 		if ($new_load->execute()) {
-			if (!empty($new_load->message)) {
-				print_r($new_load->message);
-				print '<hr>';
-			}
-			if (!empty($new_load->error)) {
-				print_r($new_load->error);
-				print '<br />';
-			}
+			print_r($new_load->message);
 		}
 		print '</pre>';
 		//
@@ -94,7 +86,7 @@
 								<input type="hidden" name="MAX_FILE_SIZE" value="1024000" />
 								<input type="file" multiple="multiple" name="pictures[]" accept=".jpg, .jpeg, .png, .webp, image/jpeg, image/pjpeg, image/png, image/webp">
 								<!--<input type="file" name="pictures[]" />
-					<input type="file" name="pictures[]" /> -->
+								<input type="file" name="pictures[]" /> -->
 					</label>
 				</p>
 			</div>

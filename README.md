@@ -40,34 +40,34 @@ b) for files array
     }
 ```   
 
-Если переменные не были установлены - используются значения по умолчанию из класса Config.   
-После определения переменных пользователем используются указанные значения.   
-Таким образом для каждого поля загрузки файлов можно определить свои переменные.
-
-If the variables have not been set, the default values from the Config class are used.   
-After the user defines the variables, the specified values are used.   
-This way, you can define your own variables for each file upload field.   
-
-В примере ниже для поля "picture" будут использованы переменные, указанные для поля "file".   
+Если переменные не были установлены - используются значения по умолчанию из класса Config. 
+If the variables have not been set, the default values from the Config class are used. 
 ```
 	$vars = [
 		'file' => 	[	'dest_dir' => 'upload_files',
 						'create_dir' => true,
 						'tmp_dir' => 'tmp_file',
 		],
-		'picture' => 	[]
+		'picture' => 	[] //default value are used
 	];
 ```   
 
-В этом примере для поля "file" будут использованы переменные со значениями по умолчанию, а для "picture" будет установлена другая директория для загрузки файлов.   
+Сообщения о перемещении файлов или ошибках записываются в `array $this->messages`:   
+Messages about file movement or errors are written to `array $this->messages`:       
 ```
-	$vars = [
-		'file' => 	[],
-		'picture' => 	['dest_dir' => 'upload_files', // where upload file will be saved]
-	];
-```   
+[$name of input => [
+    'filenames' => [
+        0 => $filename0, 1 => $filename1, ...
+    ],
+    'config' => $error_in_config,
+    'errors' => [
+        0 => $error_for_filename0, 1 => $error_for_filename1, ...
+    ]
+]] 
+```    
+
 ### CLEAR FOLDER - all files will be deleted in a directory specified by user   
-`print '<br />' . Fileupload\Classes\DelFilesInDir::run('need_folder');`   
+`print '<br />' . Fileupload\Classes\DelFilesInDir::run('folder_for_cleaning');`   
 
 
 
