@@ -56,6 +56,7 @@
 		<p><a href="javascript:history.back()">Back</a></p>
 		<?php
 		print '<pre>';
+		print_r($new_load->files);
 		if ($new_load->execute()) {
 			print_r($new_load->message);
 		}

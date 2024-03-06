@@ -12,6 +12,7 @@ use Fileupload\Classes\Messages;
 class Upload extends Config
 {
     use Traits\GetSetConfigs;
+    use Traits\CheckErrorInFiles;
 
     public array $config = [];
 
@@ -47,10 +48,6 @@ class Upload extends Config
         foreach ($this->files as $input => $input_array) {
             $mes->set($input, []);
             $this->getSetConfigs($input, $err);
-            //print '<pre>'; print_r($this); print '</pre>'; 
-            //print '<pre>'; print_r($err); print '</pre>'; 
-            print $this->dest_dir;
-
             foreach ($input_array as $key => $file) {
                 if (!empty($file['name'])) {
                     $temp_var = $mes->get($input);
@@ -58,10 +55,11 @@ class Upload extends Config
                     $mes->set($input, $temp_var);
                 }
                 if ($this->conf) {
-                    //check errors in files array $file
-
+                    if ($this->checkErrorInFiles($input,  $key, $file, $err) == false) {
+                    !!!    continue;
+                    }
                     //check other
-
+                    print 'ffffffw';
                     //move_upload each file
                 }
             }

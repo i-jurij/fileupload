@@ -4,7 +4,7 @@ namespace Fileupload\Classes;
 
 class Errors extends Registry
 {
-    public static array $phpFileUploadErrors = array(
+    public array $phpFileUploadErrors = array(
         0 => 'Success! The file uploaded.',
         1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini.',
         2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.',
@@ -14,7 +14,7 @@ class Errors extends Registry
         7 => 'Failed to write file to disk.',
         8 => 'A PHP extension stopped the file upload.',
     );
-    public static array $errors = [
+    public array $errors = [
         0 => 'Define the destination directory.',
         1 => 'UNKNOWN ERROR!',
         2 => 'Directory is not writable and chmod return false.',
