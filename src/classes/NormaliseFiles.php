@@ -3,27 +3,29 @@
 namespace Fileupload\Classes;
 
 /**
- * check if $_FILES exists and normalize it
- * @return array
+ * check if $_FILES exists and set $this->files as normalize $_FILES
+ * @return bool
  */
 class NormaliseFiles
 {
-    static function run()
+    public array $files;
+
+    function __construct()
     {
-        $normalized_array = [];
+        $this->files = [];
         if (isset($_FILES)) {
-            foreach ($_FILES as $index => $file) {
+            foreach ($_FILES as $input => $file) {
                 if (!is_array($file['name'])) {
                     if (!empty($file['name'])) {
                         $file['name'] = SanitizeFileName::run($file['name']);
-                        $normalized_array[$index][] = $file;
+                        $this->files[$input][] = $file;
                         continue;
                     }
                 }
                 if (!empty($file['name'])) {
                     foreach ($file['name'] as $idx => $name) {
                         $sanitize_name = SanitizeFileName::run($name);
-                        $normalized_array[$index][$idx] = [
+                        $this->files[$input][$idx] = [
                             'name' => $sanitize_name,
                             'type' => $file['type'][$idx],
                             'tmp_name' => $file['tmp_name'][$idx],
@@ -33,7 +35,9 @@ class NormaliseFiles
                     }
                 }
             }
+            return true;
+        } else {
+            return false;
         }
-        return $normalized_array;
     }
 }

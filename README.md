@@ -14,8 +14,7 @@ b) for files array
 `public string $dest_dir` - files destination directory (eg 'imgs/res');   
 `public int $dir_permissions` - permissions of destination directory for linux system (eg 0755);   
 `public int $file_permissions` - permissions of files in destination directory for linux system (eg 0644);   
-`public bool $create_dir` - create destination directory if it not exist (true or false);  
-`public string $tmp_dir` - temporary directory for file upload, eg for original files before processing (eg 'imgs/temp');   
+`public bool $create_dir` - create destination directory if it not exist (true or false);    
 `public int $file_size` - maximum size of file for upload in Bytes (eg 3*10*1024 - 30KB);   
 `public $file_mimetype` - mimetype of file for upload (eg 'image', 'text' or 'image/webp');   
 `public $file_ext` - extension of file for upload (eg 'bmp', 'txt', 'avi');   
@@ -51,20 +50,39 @@ If the variables have not been set, the default values from the Config class are
 		'picture' => 	[] //default value are used
 	];
 ```   
+Имена перемещенных файлов записываются в объект класса Messages `$this->messages`:   
+Name of moved file are written to `$this->messages`:   
+```
+[$name of input => [
+    'filenames' => [
+        0 => $filename0, 1 => $filename1, ...
+    ], ...
+]]
+```     
+Сообщения об ошибках записываются в объект класса Errors `$this->errors`:   
+Messages about errors are written to `$this->errors`:   
+```
+[   $name of input => ['errors' => $error_in_config],
+    $name of input => [
+    'errors' => [0 => $error_for_filename0, 1 => $error_for_filename1, ...]
+    ]
+]
+```     
 
-Сообщения о перемещении файлов или ошибках записываются в `array $this->messages`:   
-Messages about file movement or errors are written to `array $this->messages`:       
+Сообщения о перемещении файлов и ошибках записываются в `array $this->info`:   
+Messages about file movement фтв errors are written to `array $this->info`:       
 ```
 [$name of input => [
     'filenames' => [
         0 => $filename0, 1 => $filename1, ...
     ],
-    'config' => $error_in_config,
     'errors' => [
         0 => $error_for_filename0, 1 => $error_for_filename1, ...
     ]
 ]] 
 ```    
+Вывести все сообщения и ошибки в html-коде: `$this->printInfo()`   
+Print all messages and errors in html: `$this->printInfo()`  
 
 ### CLEAR FOLDER - all files will be deleted in a directory specified by user   
 `print '<br />' . Fileupload\Classes\DelFilesInDir::run('folder_for_cleaning');`   

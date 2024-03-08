@@ -4,26 +4,16 @@
 namespace Fileupload;
 
 use Fileupload\Classes\Config;
-use Fileupload\Classes\NormaliseFiles;
 use Fileupload\Classes\CheckDestDir;
-use Fileupload\Classes\Errors;
-use Fileupload\Classes\Messages;
+use Fileupload\Classes\PrintInfo;
 
 class Upload extends Config
 {
-    use Traits\GetSetConfigs;
     use Traits\CheckErrorInFiles;
-
-    public array $config = [];
-
     /**
-     * normalize $_FILES
+     * array for all class messages and errors
      */
-    function __construct()
-    {
-        $this->files = NormaliseFiles::run();
-        //print '<pre>'; print_r($this->files); print '</pre>';
-    }
+    public array $info = [];
 
     /**
      * check if isset data in $this->files after normalize $_FILES
@@ -41,32 +31,31 @@ class Upload extends Config
      * check errors for each upload file 
      * 
      */
-    public function execute()
+    public function upload()
     {
-        $mes = new Messages;
-        $err = new Errors;
         foreach ($this->files as $input => $input_array) {
-            $mes->set($input, []);
-            $this->getSetConfigs($input, $err);
-            foreach ($input_array as $key => $file) {
-                if (!empty($file['name'])) {
-                    $temp_var = $mes->get($input);
-                    $temp_var['filesname'][$key] = $file['name'];
-                    $mes->set($input, $temp_var);
-                }
-                if ($this->conf) {
-                    if ($this->checkErrorInFiles($input,  $key, $file, $err) == false) {
-                    !!!    continue;
+            if ($this->setConfigs($input)) {
+                $this->message->set($input, []);
+                foreach ($input_array as $key => $file) {
+                    if (!empty($file['name'])) {
+                        $temp_var = $this->message->get($input);
+                        $temp_var['filesname'][$key] = $file['name'];
+                        $this->message->set($input, $temp_var);
                     }
-                    //check other
-                    print 'ffffffw';
-                    //move_upload each file
+                    if ($this->checkNoErrorInFiles($input, $key, $file)) {
+                        //check other
+                        //move_upload each file
+                    };
                 }
             }
         }
-        $this->error = $err->getAll();
-        $this->message = array_merge_recursive($mes->getAll(), $this->error);
+        $this->info = array_merge_recursive($this->message->getAll(), $this->error->getAll());
+
         return true;
+    }
+
+    public function printInfo(){
+        return (new PrintInfo)->printInfo($this->info);
     }
 }
 //Copyright © 2023 I-Jurij (ijurij@gmail.com)

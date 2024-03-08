@@ -10,6 +10,7 @@
 	<meta HTTP-EQUIV="Content-language" CONTENT="ru-RU">
 	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
 	<meta name="author" content="i-jurij">
+	<!-- <link rel="icon" href="favicon.png" /> -->
 </head>
 
 <body style="width:100%;">
@@ -29,7 +30,7 @@
 		'picture' => 	[],
 		'file' => 	[
 			'dest_dir' => 'upload_text', // where upload file will be saved
-			'create_dir' => 123, //create destination dir
+			'create_dir' => true, //create destination dir
 			'dir_permissions' => 0777, // permissions for dest dir
 			'file_size' => 3 * 100 * 1024, //300KB - size for upload files = MAX_FILE_SIZE from html
 			'file_permissions' => 0666, // permissions for the file being created
@@ -55,12 +56,11 @@
 	?>
 		<p><a href="javascript:history.back()">Back</a></p>
 		<?php
+		$new_load->upload();
 		print '<pre>';
-		print_r($new_load->files);
-		if ($new_load->execute()) {
-			print_r($new_load->message);
-		}
+		//print_r($new_load->info);
 		print '</pre>';
+		$new_load->printInfo();
 		//
 		// some command for processing a file located in a dest_dir
 		//
