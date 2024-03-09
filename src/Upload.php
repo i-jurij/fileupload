@@ -4,12 +4,13 @@
 namespace Fileupload;
 
 use Fileupload\Classes\Config;
-use Fileupload\Classes\CheckDestDir;
 use Fileupload\Classes\PrintInfo;
+use Fileupload\Classes\CheckCreateDestDir;
+use Fileupload\Classes\CheckFileSize;
 
 class Upload extends Config
 {
-    use Traits\CheckErrorInFiles;
+    use Traits\CheckNoErrorInFiles;
     /**
      * array for all class messages and errors
      */
@@ -36,6 +37,10 @@ class Upload extends Config
         foreach ($this->files as $input => $input_array) {
             if ($this->setConfigs($input)) {
                 $this->message->set($input, []);
+                //check dest_dir
+                if (!(new CheckCreateDestDir)->run($this->dest_dir, $this->dir_permissions, $this->create_dir, $this->error, $input)) {
+                    continue;
+                }
                 foreach ($input_array as $key => $file) {
                     if (!empty($file['name'])) {
                         $temp_var = $this->message->get($input);
@@ -43,8 +48,11 @@ class Upload extends Config
                         $this->message->set($input, $temp_var);
                     }
                     if ($this->checkNoErrorInFiles($input, $key, $file)) {
-                        //check other
+                        if (!(new CheckFileSize)->run($file['size'], $this->file_size, $this->error, $input, $key)) {
+                            continue;
+                        }
                         //move_upload each file
+
                     };
                 }
             }

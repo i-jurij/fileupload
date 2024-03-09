@@ -13,7 +13,7 @@
 	<!-- <link rel="icon" href="favicon.png" /> -->
 </head>
 
-<body style="width:100%;">
+<body style="width:100%;background-color:whitesmoke;color:black;">
 
 	<?php
 	error_reporting(E_ALL);
@@ -27,9 +27,9 @@
 
 	//set vars for each inputs from form if you need it (array('name_of_input' => [vars]))
 	$new_load->config = [
-		'picture' => 	[],
+		'picture' => 	[], //default
 		'file' => 	[
-			'dest_dir' => 'upload_text', // where upload file will be saved
+			'dest_dir' => 'test/upload_text', // where upload file will be saved
 			'create_dir' => true, //create destination dir
 			'dir_permissions' => 0777, // permissions for dest dir
 			'file_size' => 3 * 100 * 1024, //300KB - size for upload files = MAX_FILE_SIZE from html
@@ -41,9 +41,6 @@
 		],
 		'pictures' => [
 			'dest_dir' => 'upload_pictures/',
-			//'create_dir' => true, the same as "file"
-			//'dir_permissions' => 0777, the same as "file"
-			//'file_permissions' => 0666, the same as "file"
 			'file_size' => 1 * 1000 * 1024, //1MB
 			'file_mimetype' => ['image/jpeg', 'image/pjpeg', 'image/png', 'image/webp'],
 			'file_ext' => ['.jpg', '.jpeg', '.png', '.webp'],

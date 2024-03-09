@@ -2,7 +2,7 @@
 
 namespace Fileupload\Traits;
 
-trait CheckErrorInFiles
+trait CheckNoErrorInFiles
 {
     /**
      * @param $input - name of input

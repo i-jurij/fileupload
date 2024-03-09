@@ -6,7 +6,7 @@ class PrintInfo
 {
     public function printInfo(array $info){
         if (!empty($info) && is_array($info)) {
-            print '<div style="background-color:LightCyan; margin:1rem;padding:1rem;">';
+            print '<div style="background-color:WhiteSmoke; margin:1rem;padding:1rem;">';
             foreach ($info as $input => $value) {
                 print '<p style="color:black;"><b>Input "' . $input .'"</b>:</p>';
                 if (key_exists('filesname', $value)) {
@@ -23,14 +23,14 @@ class PrintInfo
                         //print error for file with name $filename
                         if (!empty($value['errors']) && !empty($value['errors'][$key])) {
                             print '<span style="color:red;">' . $value['errors'][$key] .'</span></p>';
-                        } else {
+                        } elseif (!empty($value['upload']) && !empty($value['upload'][$key])) {
                             print 'UPLOADED.</p>';
                         }
                         
                     }
                 } elseif (key_exists('errors', $value) && is_string($value['errors'])) {
                     //print configs error
-                    print $value['errors'] . '<br />';
+                    print '<p style="color:red;">' . $value['errors'] . '</p>';
                 }
                 
             }
