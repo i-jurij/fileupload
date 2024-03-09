@@ -11,7 +11,6 @@ class CheckFileSize
      * @param object $err from class Errors
      * @param $input - name of input
      * @param $key - key of data array of file from input into $this-Files (normalise $_FILES array)
-     * @param array $file - data array of file from input into $this-Files (normalise $_FILES array)
      * @return bool
      */
     function run(int $size_of_file, int $filesize_from_config, object $err, $input, $key)

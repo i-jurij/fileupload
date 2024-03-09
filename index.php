@@ -27,7 +27,7 @@
 
 	//set vars for each inputs from form if you need it (array('name_of_input' => [vars]))
 	$new_load->config = [
-		'picture' => 	[], //default
+		'picture' => [],
 		'file' => 	[
 			'dest_dir' => 'test/upload_text', // where upload file will be saved
 			'create_dir' => true, //create destination dir
@@ -77,6 +77,7 @@
 					<label>Picture <small>(jpg, png, webp, < 1MB)</small>:<br />
 								<input type="hidden" name="MAX_FILE_SIZE" value="1024000" />
 								<input type="file" name="picture" accept=".jpg, .jpeg, .png, .webp, image/jpeg, image/pjpeg, image/png, image/webp">
+								<!-- <input type="file" name="picture"> -->
 					</label>
 				</p>
 				<p>

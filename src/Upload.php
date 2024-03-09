@@ -6,7 +6,9 @@ namespace Fileupload;
 use Fileupload\Classes\Config;
 use Fileupload\Classes\PrintInfo;
 use Fileupload\Classes\CheckCreateDestDir;
+use Fileupload\Classes\CheckExtension;
 use Fileupload\Classes\CheckFileSize;
+use Fileupload\Classes\CheckMimeType;
 
 class Upload extends Config
 {
@@ -49,6 +51,15 @@ class Upload extends Config
                     }
                     if ($this->checkNoErrorInFiles($input, $key, $file)) {
                         if (!(new CheckFileSize)->run($file['size'], $this->file_size, $this->error, $input, $key)) {
+                            continue;
+                        }
+                        if (!(new CheckMimeType)->run($file['name'], $file['tmp_name'], $this->error, $input, $key, $this->file_mimetype, $this->file_ext)) {
+                            continue;
+                        }
+                        if (!(new CheckExtension)->run($file['name'], $file['tmp_name'], $this->error, $input, $key, $this->file_ext)) {
+                            continue;
+                        }
+                        if (!(new CheckNewFileName)->run($input_array, $key, $file) === false) {
                             continue;
                         }
                         //move_upload each file
