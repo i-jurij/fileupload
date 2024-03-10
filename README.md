@@ -19,11 +19,11 @@ or from github.com
 	"repositories": [
 		{
 			"type": "git",
-			"url": "http://github.com/ijurij/fileupload"
+			"url": "https://github.com/i-jurij/fileupload"
 		}
 	],
 	"require": {
-		"ijurij/fileupload": "dev-main"
+		"i-jurij/fileupload": "dev-main"
 	}
 ```   
 
