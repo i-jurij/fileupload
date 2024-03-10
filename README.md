@@ -29,12 +29,12 @@ or from github.com
 
 ### Usage
 
-#### Init
+#### 1. Init
 ```
 	use Fileupload\Upload;
 	$new_load = new Upload();
 ```
-#### Set vars for upload
+#### 2. Set vars for upload
 ```
 $new_load->config = [
 		'picture' => [],
@@ -59,16 +59,16 @@ $new_load->config = [
 		]
 	];
 ```
-#### Execute
+#### 3. Execute
 ```
 $new_load->upload();
 ```
-#### Print info
+#### 4. Print info
 ```
 /* print '<pre>'; print_r($new_load->info); print '</pre>'; */
 $new_load->printInfo();
 ```
-#### Clear folder if you need it and print result message
+#### 5. Clear folder if you need it and print result message
 ```
 print Fileupload\Classes\DelFilesInDir::run('folder_for_cleaning');
 ```
