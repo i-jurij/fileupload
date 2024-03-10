@@ -23,7 +23,7 @@ or from github.com
 		}
 	],
 	"require": {
-		"ijurij/fileupload": "dev-master"
+		"ijurij/fileupload": "dev-main"
 	}
 ```   
 
