@@ -17,7 +17,7 @@ class Config extends NormaliseFiles
     /**
      *  permissions of destination directory for linux system (eg 0755)
      */
-    public int $dir_permissions;
+    public $dir_permissions;
     /**
      * permissions of files in destination directory for linux system (eg 0644)
      */
