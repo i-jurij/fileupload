@@ -94,10 +94,10 @@ if ($new_load->issetData()) {
 		$new_load->printInfo();
         // other files processing here 
         print Fileupload\Classes\DelFilesInDir::run('folder_for_cleaning');
-	} else { 
-        // print html form here
-    }
-```
+} else { 
+    // print html form here
+}
+```   
 
 ### HTML form info
 HTML inputs must be next formats:   
