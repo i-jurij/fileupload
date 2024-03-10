@@ -9,6 +9,8 @@ use Fileupload\Classes\CheckCreateDestDir;
 use Fileupload\Classes\CheckExtension;
 use Fileupload\Classes\CheckFileSize;
 use Fileupload\Classes\CheckMimeType;
+use Fileupload\Classes\CheckNewFileName;
+use Fileupload\Classes\Move;
 
 class Upload extends Config
 {
@@ -59,11 +61,14 @@ class Upload extends Config
                         if (!(new CheckExtension)->run($file['name'], $file['tmp_name'], $this->error, $input, $key, $this->file_ext)) {
                             continue;
                         }
-                        if (!(new CheckNewFileName)->run($input_array, $key, $file) === false) {
+                        $checkname = (new CheckNewFileName)->run($this->dest_dir, $this->replace_old_file, $file['name'], $this->error,$input, $key, $this->new_file_name);
+                        if (is_string($checkname)) {
+                            if (!(new Move)->run($file['tmp_name'], $this->dest_dir, $checkname, $this->error, $this->message, $input, $key, $this->file_permissions)) {
+                                continue;
+                            }
+                        } else {
                             continue;
                         }
-                        //move_upload each file
-
                     };
                 }
             }
@@ -73,6 +78,9 @@ class Upload extends Config
         return true;
     }
 
+    /**
+     * print all messages and errors in html
+     */
     public function printInfo(){
         return (new PrintInfo)->printInfo($this->info);
     }

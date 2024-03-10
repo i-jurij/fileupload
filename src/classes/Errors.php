@@ -29,7 +29,7 @@ class Errors extends Registry
         11 => 'Wrong extension.',
         12 => 'Wrong type in input data "file_ext", must be empty, string or array.',
         13 => 'Value "name" from $_FILES is empty.',
-        14 => 'A file with that name exists in the directory.',
+        14 => 'A file with that name exists in the directory: ',
         15 => 'Possible file upload attack.',
         16 => 'ERROR! No deleted files in dir, because dir is not readable.'
     ]; 

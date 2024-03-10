@@ -23,10 +23,9 @@ class PrintInfo
                         //print error for file with name $filename
                         if (!empty($value['errors']) && !empty($value['errors'][$key])) {
                             print '<span style="color:red;">' . $value['errors'][$key] .'</span></p>';
-                        } elseif (!empty($value['upload']) && !empty($value['upload'][$key])) {
-                            print 'UPLOADED.</p>';
+                        } elseif (!empty($value['uploaded']) && !empty($value['uploaded'][$key])) {
+                            print $value['uploaded'][$key] . '</p>';
                         }
-                        
                     }
                 } elseif (key_exists('errors', $value) && is_string($value['errors'])) {
                     //print configs error

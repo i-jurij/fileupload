@@ -11,8 +11,8 @@ class CheckMimeType
      * @param object of class Errors $err
      * @param $input - name of input
      * @param $key - key of data array of file from input into $this-Files (normalise $_FILES array)     
-     * @param array or string $file_mimetype_from_config (from configs array)
-     * @param array or string $file_ext_from_config from configs array
+     * @param ?array or string $file_mimetype_from_config (from configs array)
+     * @param ?array or string $file_ext_from_config from configs array
      * @return bool
      */
     function run(string $file_name, string $file_tmp_name, object $err,  $input, $key, $file_mimetype_from_config, $file_ext_from_config)

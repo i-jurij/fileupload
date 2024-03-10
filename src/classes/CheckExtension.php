@@ -7,7 +7,7 @@ class CheckExtension
     /**
      * @param string $filename (from $_FILES['name])
      * @param string $file_tmp_name (from $_FILES['tmp_name])
-     * @param array or string $file_ext_from_config from configs array 
+     * @param ?array or string $file_ext_from_config from configs array 
      * @param object of class Errors $err
      * @param $input - name of input
      * @param $key - key of data array of file from input into $this-Files (normalise $_FILES array)

@@ -44,7 +44,7 @@
 			'file_size' => 1 * 1000 * 1024, //1MB
 			'file_mimetype' => ['image/jpeg', 'image/pjpeg', 'image/png', 'image/webp'],
 			'file_ext' => ['.jpg', '.jpeg', '.png', '.webp'],
-			'new_file_name' => ['zzz', 'index'], // ['', 'noindex'], 'new_filename'
+			'new_file_name' => ['zzz', 'index'], // ['', 'noindex'], 'new_filename' (!!! Don't do that: ['name', 'noindex'] - because you set the same name for all pictures!)
 			'replace_old_file' => true
 		]
 	];

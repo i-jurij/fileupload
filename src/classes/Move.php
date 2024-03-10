@@ -2,16 +2,30 @@
 
 namespace Fileupload\Classes;
 
+/**
+ * @param string $file_tmp_name (from $_FILES['tmp_name])
+ *  @param string $dest_dir (files destination directory from configs array), 
+ * @param ?array $new_file_name from configs array
+ * @param object of class Errors $err
+ * @param object of class Messages $mes, 
+ * @param $input - name of input
+ * @param $key - key of data array of file from input into $this-files (normalise $_FILES array)
+ * @param $file_permissions for the file being created (from configs array)
+ */
 class Move
 {
-    protected function move(string $file_tmp_name)
+    function run(string $file_tmp_name, string $dest_dir, string $new_file_name, object $err, object $mes, $input, $key, $file_permissions)
     {
-        if (move_uploaded_file($file_tmp_name, $dir . DIRECTORY_SEPARATOR . $this->new_file_name)) {
-            chmod($dir . DIRECTORY_SEPARATOR . $this->new_file_name, $this->file_permissions);
-            $this->message .= 'File is uploaded to: "' . $dir . DIRECTORY_SEPARATOR . $this->new_file_name . '".<br />';
+        if (move_uploaded_file($file_tmp_name, $dest_dir . DIRECTORY_SEPARATOR . $new_file_name)) {
+            chmod($dest_dir . DIRECTORY_SEPARATOR . $new_file_name, $file_permissions);
+            $temp_var = $mes->get($input);
+            $temp_var['uploaded'][$key] = 'UPLOADED to: "' . $dest_dir . DIRECTORY_SEPARATOR . $new_file_name . '".';
+            $mes->set($input, $temp_var);
             return true;
         } else {
-            $this->error = 'ERROR!<br />' . $this->errors[15] . '<br />';
+            $temp_err = $err->get($input);
+            $temp_err['errors'][$key] = 'ERROR! ' . $err->errors[15];
+            $err->set($input, $temp_err);
             return false;
         }
     }
