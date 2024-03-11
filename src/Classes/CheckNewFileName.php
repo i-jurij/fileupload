@@ -56,7 +56,7 @@ class CheckNewFileName
      */
     protected function newName(string $file_name, object $err, $input, $key, $new_file_name)
     {
-        $sanitize = new SanitizeFileName;
+        //$sanitize = new SanitizeFileName;
         $translit = new TranslitOstSlavToLat;
         //get parts of files name
         if (!empty($file_name)) {
@@ -70,11 +70,13 @@ class CheckNewFileName
         //sanitize filename or create filename from old filename
         if (!empty($new_file_name)) {
             $name = $this->name0($new_file_name, $path_parts['filename'], $key);
-            $this->name = pathinfo($sanitize->run($translit->run($name)), PATHINFO_FILENAME);
+            //$this->name = pathinfo($sanitize->run($translit->run($name)), PATHINFO_FILENAME);
+            $this->name = pathinfo($translit->run($name), PATHINFO_FILENAME);
             return true;
         } else {
             //create new file name
-            $this->name = $sanitize->run($translit->run($path_parts['filename']));
+            //$this->name = $sanitize->run($translit->run($path_parts['filename']));
+            $this->name = $translit->run($path_parts['filename']);
             return true;
         }
     }
