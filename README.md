@@ -35,6 +35,13 @@ or from github.com
 	$new_load = new Upload();
 ```
 #### 2. Set vars for upload
+##### HTML form info
+HTML inputs must be next formats:   
+a) for single file   
+``` <input type="file" name="file" > ```   
+b) for files array        
+``` <input type="file" name="pictures[]" > ```  
+##### Configs
 ```
 $new_load->config = [
 		'picture' => [],
@@ -97,13 +104,6 @@ if ($new_load->issetData()) {
     // print html form here
 }
 ```   
-
-### HTML form info
-HTML inputs must be next formats:   
-a) for single file   
-``` <input type="file" name="file" > ```   
-b) for files array        
-``` <input type="file" name="pictures[]" > ```  
 
 ### Variables that the user can define:   
 `public string $dest_dir` - files destination directory (eg 'imgs/res');   
