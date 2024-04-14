@@ -1,6 +1,8 @@
 <?php
+
 //Copyright © 2024 I-Jurij (yjurij@gmail.com)
 //Licensed under the Apache License, Version 2.0
+
 namespace Fileupload;
 
 use Fileupload\Classes\Config;
@@ -32,9 +34,9 @@ class Upload extends Config
     /**
      * set default vars from class Config
      * init object from class Error extends class Registry for errors saving
-     * foreach $this->files (normalized $_FILES array) for processing and get configs for inputs  
-     * check errors for each upload file 
-     * 
+     * foreach $this->files (normalized $_FILES array) for processing and get configs for inputs
+     * check errors for each upload file
+     *
      */
     public function upload()
     {
@@ -42,7 +44,7 @@ class Upload extends Config
             if ($this->setConfigs($input)) {
                 $this->message->set($input, []);
                 //check dest_dir
-                if (!(new CheckCreateDestDir)->run($this->dest_dir, $this->dir_permissions, $this->create_dir, $this->error, $input)) {
+                if (!(new CheckCreateDestDir())->run($this->dest_dir, $this->dir_permissions, $this->create_dir, $this->error, $input)) {
                     continue;
                 }
                 foreach ($input_array as $key => $file) {
@@ -52,18 +54,18 @@ class Upload extends Config
                         $this->message->set($input, $temp_var);
                     }
                     if ($this->checkNoErrorInFiles($input, $key, $file)) {
-                        if (!(new CheckFileSize)->run($file['size'], $this->file_size, $this->error, $input, $key)) {
+                        if (!(new CheckFileSize())->run($file['size'], $this->file_size, $this->error, $input, $key)) {
                             continue;
                         }
-                        if (!(new CheckMimeType)->run($file['name'], $file['tmp_name'], $this->error, $input, $key, $this->file_mimetype, $this->file_ext)) {
+                        if (!(new CheckMimeType())->run($file['name'], $file['tmp_name'], $this->error, $input, $key, $this->file_mimetype, $this->file_ext)) {
                             continue;
                         }
-                        if (!(new CheckExtension)->run($file['name'], $file['tmp_name'], $this->error, $input, $key, $this->file_ext)) {
+                        if (!(new CheckExtension())->run($file['name'], $file['tmp_name'], $this->error, $input, $key, $this->file_ext)) {
                             continue;
                         }
-                        $checkname = (new CheckNewFileName)->run($this->dest_dir, $this->replace_old_file, $file['name'], $this->error,$input, $key, $this->new_file_name);
+                        $checkname = (new CheckNewFileName())->run($this->dest_dir, $this->replace_old_file, $file['name'], $this->error, $input, $key, $this->new_file_name);
                         if (is_string($checkname)) {
-                            if (!(new Move)->run($file['tmp_name'], $this->dest_dir, $checkname, $this->error, $this->message, $input, $key, $this->file_permissions)) {
+                            if (!(new Move())->run($file['tmp_name'], $this->dest_dir, $checkname, $this->error, $this->message, $input, $key, $this->file_permissions)) {
                                 continue;
                             }
                         } else {
@@ -77,12 +79,19 @@ class Upload extends Config
 
         return true;
     }
-
+    /**
+     * all messages and errors to string
+     */
+    public function infoToString()
+    {
+        return (new PrintInfo())->infoToString($this->info);
+    }
     /**
      * print all messages and errors in html
      */
-    public function printInfo(){
-        return (new PrintInfo)->printInfo($this->info);
+    public function printInfo()
+    {
+        return (new PrintInfo())->printInfo($this->info);
     }
 }
 //Copyright © 2023 I-Jurij (ijurij@gmail.com)
