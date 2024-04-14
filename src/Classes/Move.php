@@ -18,7 +18,7 @@ class Move
     {
         if (move_uploaded_file($file_tmp_name, $dest_dir.DIRECTORY_SEPARATOR.$new_file_name)) {
             clearstatcache();
-            if ($file_permissions === (fileperms($dest_dir.DIRECTORY_SEPARATOR.$new_file_name) & 0777)) {
+            if ($file_permissions !== substr(sprintf('%o', fileperms($dest_dir.DIRECTORY_SEPARATOR.$new_file_name)), -4)) {
                 chmod($dest_dir.DIRECTORY_SEPARATOR.$new_file_name, $file_permissions);
             }
 
