@@ -18,10 +18,11 @@ class Move
     {
         if (move_uploaded_file($file_tmp_name, $dest_dir.DIRECTORY_SEPARATOR.$new_file_name)) {
             clearstatcache();
-            if ($file_permissions !== substr(sprintf('%o', fileperms($dest_dir.DIRECTORY_SEPARATOR.$new_file_name)), -4)) {
+            $fileperms_for_uploaded_file = fileperms($dest_dir.DIRECTORY_SEPARATOR.$new_file_name);
+            if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN'
+                && $file_permissions !== substr(sprintf('%o', $fileperm_for_uploaded_file, -4))) {
                 chmod($dest_dir.DIRECTORY_SEPARATOR.$new_file_name, $file_permissions);
             }
-
             $temp_var = $mes->get($input);
             $temp_var['uploaded'][$key] = 'UPLOADED to: "'.$dest_dir.DIRECTORY_SEPARATOR.$new_file_name.'".';
             $mes->set($input, $temp_var);
