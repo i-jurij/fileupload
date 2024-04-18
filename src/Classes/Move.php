@@ -20,7 +20,7 @@ class Move
             clearstatcache();
             $fileperms_for_uploaded_file = fileperms($dest_dir.DIRECTORY_SEPARATOR.$new_file_name);
             if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN'
-                && $file_permissions !== substr(sprintf('%o', $fileperms_for_uploaded_file, -4))) {
+                && $file_permissions !== substr(sprintf('%o', $fileperms_for_uploaded_file), -4)) {
                 chmod($dest_dir.DIRECTORY_SEPARATOR.$new_file_name, $file_permissions);
             }
             $temp_var = $mes->get($input);
