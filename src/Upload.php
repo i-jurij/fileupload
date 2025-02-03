@@ -1,29 +1,30 @@
 <?php
 
-//Copyright © 2024 I-Jurij (yjurij@gmail.com)
-//Licensed under the Apache License, Version 2.0
+// Copyright © 2024 I-Jurij (yjurij@gmail.com)
+// Licensed under the Apache License, Version 2.0
 
 namespace Fileupload;
 
-use Fileupload\Classes\Config;
-use Fileupload\Classes\PrintInfo;
 use Fileupload\Classes\CheckCreateDestDir;
 use Fileupload\Classes\CheckExtension;
 use Fileupload\Classes\CheckFileSize;
 use Fileupload\Classes\CheckMimeType;
 use Fileupload\Classes\CheckNewFileName;
+use Fileupload\Classes\Config;
 use Fileupload\Classes\Move;
+use Fileupload\Classes\PrintInfo;
 
 class Upload extends Config
 {
     use Traits\CheckNoErrorInFiles;
     /**
-     * array for all class messages and errors
+     * array for all class messages and errors.
      */
     public array $info = [];
 
     /**
-     * check if isset data in $this->files after normalize $_FILES
+     * check if isset data in $this->files after normalize $_FILES.
+     *
      * @return bool
      */
     public function issetData()
@@ -35,15 +36,14 @@ class Upload extends Config
      * set default vars from class Config
      * init object from class Error extends class Registry for errors saving
      * foreach $this->files (normalized $_FILES array) for processing and get configs for inputs
-     * check errors for each upload file
-     *
+     * check errors for each upload file.
      */
     public function upload()
     {
         foreach ($this->files as $input => $input_array) {
             if ($this->setConfigs($input)) {
                 $this->message->set($input, []);
-                //check dest_dir
+                // check dest_dir
                 if (!(new CheckCreateDestDir())->run($this->dest_dir, $this->dir_permissions, $this->create_dir, $this->error, $input)) {
                     continue;
                 }
@@ -71,7 +71,7 @@ class Upload extends Config
                         } else {
                             continue;
                         }
-                    };
+                    }
                 }
             }
         }
@@ -79,20 +79,20 @@ class Upload extends Config
 
         return true;
     }
+
     /**
-     * all messages and errors to string
+     * all messages and errors to string.
      */
     public function infoToString()
     {
         return (new PrintInfo())->infoToString($this->info);
     }
+
     /**
-     * print all messages and errors in html
+     * print all messages and errors in html.
      */
     public function printInfo()
     {
         return (new PrintInfo())->printInfo($this->info);
     }
 }
-//Copyright © 2023 I-Jurij (ijurij@gmail.com)
-//Licensed under the Apache License, Version 2.0
